@@ -18,5 +18,5 @@ pytest = "^7.2.0"
 mypy = "0.991"
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=1.2.0"]
 build-backend = "poetry.core.masonry.api"
