@@ -15,7 +15,7 @@ def priority(item: str) -> int:
 class Task1(Task):
     def calculate(self, input_lines: Iterable[str], working_dir: Path) -> int:
         rucksacks: list[tuple[str, str]] = [
-            (line[: len(line) // 2], line[-len(line) // 2:]) for line in input_lines
+            (line[: len(line) // 2], line[-len(line) // 2 :]) for line in input_lines
         ]
         return sum(
             priority(item)
