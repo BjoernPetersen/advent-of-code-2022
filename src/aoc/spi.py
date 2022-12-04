@@ -5,7 +5,7 @@ from pathlib import Path
 
 class Task(abc.ABC):
     @abc.abstractmethod
-    def run(self, input_file: Path, working_dir: Path) -> str:
+    def run(self, input_file: Path, working_dir: Path) -> str | int:
         pass
 
 

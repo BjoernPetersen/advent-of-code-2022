@@ -1,21 +1,21 @@
 import pytest
 
-from aoc.day01 import Task2
+from aoc.day02 import Task1
 from aoc.spi import Task
 from tests.aoc.example import ExampleData
 
 
 @pytest.fixture
 def task() -> Task:
-    return Task2()
+    return Task1()
 
 
 @pytest.fixture()
 def test_data() -> ExampleData:
-    return ExampleData(1, 2)
+    return ExampleData(2, 1)
 
 
 def test_example(task, test_data, tmp_path):
     path = test_data.provide_path()
     result = task.run(path, tmp_path)
-    assert result == 45000
+    assert result == 15

@@ -24,18 +24,18 @@ def read_inventories(input_file: Path) -> list[list[int]]:
 
 
 class Task1(Task):
-    def run(self, input_file: Path, working_dir: Path) -> str:
+    def run(self, input_file: Path, working_dir: Path) -> int:
         inventories = read_inventories(input_file)
         sums = [sum(inv) for inv in inventories]
-        return str(max(sums))
+        return max(sums)
 
 
 class Task2(Task):
-    def run(self, input_file: Path, working_dir: Path) -> str:
+    def run(self, input_file: Path, working_dir: Path) -> int:
         inventories = read_inventories(input_file)
         sums = [sum(inv) for inv in inventories]
         sums.sort()
-        return str(sum(sums[-3:]))
+        return sum(sums[-3:])
 
 
 day = Day([Task1(), Task2()])
