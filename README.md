@@ -1,4 +1,4 @@
-# aoc-2022
+# advent-of-code-2022
 
 Wanted to do this in Swift, but Jetbrains doesn't have a (non-mobile development, non-Mac) IDE
 for it.
