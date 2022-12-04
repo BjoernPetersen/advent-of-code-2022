@@ -45,7 +45,7 @@ def load_strategy(input_path: Path) -> Strategy:
 
 
 def make_round(move: Move, outcome: Outcome) -> Round:
-    my_move: Move = move + outcome
+    my_move: Move = move + outcome  # type: ignore
     if my_move < min(Move):
         my_move = max(Move)
     elif my_move > max(Move):
