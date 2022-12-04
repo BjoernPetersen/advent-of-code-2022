@@ -14,10 +14,9 @@ def _prepare_environment(
     input_file_override: Path | None,
 ) -> tuple[Path, Path]:
     day_dir = Path("day{:02}".format(day))
-    task_dir = day_dir / Path("task{}".format(task))
 
     input_file = input_file_override or Path("inputs") / day_dir / Path("input.txt")
-    working_dir = Path("outputs") / task_dir
+    working_dir = Path("outputs") / day_dir / Path(f"task{task}")
 
     if not input_file.is_file():
         raise OSError(f"Input file '{input_file}' does not exist")
