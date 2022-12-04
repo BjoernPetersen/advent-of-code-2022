@@ -4,3 +4,7 @@ outputs/
 .idea/
 .venv/
 *.pyc
+
+/.mypy_cache/
+/.pytest_cache/
+.coverage
