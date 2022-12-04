@@ -69,4 +69,5 @@ def task(day: int, task: int, input_file: Path | None):
         print(e)
         sys.exit(2)
 
-    task_impl.run(*paths)
+    result = task_impl.run(*paths)
+    print(f"Result for day {day} task {task} is {result}")
