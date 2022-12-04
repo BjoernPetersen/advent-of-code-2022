@@ -1,24 +1,8 @@
-from __future__ import annotations
-
-from dataclasses import dataclass
-from enum import IntEnum
 from pathlib import Path
-from typing import TypeAlias, Callable
+from typing import Callable, TypeAlias
 
 from aoc.spi import Task
-
-
-class Move(IntEnum):
-    rock = 1
-    paper = 2
-    scissors = 3
-
-
-@dataclass(frozen=True)
-class Round:
-    their_move: Move
-    my_move: Move
-
+from .common import Move, score_round, Round
 
 Strategy: TypeAlias = list[Round]
 
@@ -30,31 +14,11 @@ def load_strategy(input_path: Path, map_to_move: Callable[[str], Move]) -> Strat
             parts = line.strip().split()
             moves = Round(
                 their_move=map_to_move(parts[0]),
-                my_move=map_to_move(parts[1]
-
-                                    ),
+                my_move=map_to_move(parts[1]),
             )
             result.append(moves)
 
     return result
-
-
-def score_round(round: Round) -> int:
-    outcome_points: int
-    their_move = round.their_move
-    my_move = round.my_move
-
-    if their_move == my_move:
-        # Draw
-        outcome_points = 3
-    elif their_move % len(Move) + 1 == my_move:
-        # Win
-        outcome_points = 6
-    else:
-        # Loss
-        outcome_points = 0
-
-    return outcome_points + my_move
 
 
 class Task1(Task):
