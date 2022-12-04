@@ -8,9 +8,13 @@ import click
 from aoc.spi import Day
 
 
-def _prepare_environment(day: int, task: int) -> tuple[Path, Path]:
+def _prepare_environment(
+    day: int,
+    task: int,
+    input_file_override: Path | None,
+) -> tuple[Path, Path]:
     task_dir = Path("day{:02}".format(day), "task{}".format(task))
-    input_file = Path("inputs") / task_dir / Path("input.txt")
+    input_file = input_file_override or Path("inputs") / task_dir / Path("input.txt")
     working_dir = Path("outputs") / task_dir
 
     if not input_file.is_file():
@@ -35,12 +39,25 @@ def _load_day(day: int) -> Day:
     return day_module.day
 
 
-@click.command()
+@click.group()
+def main():
+    pass
+
+
+@main.group()
+@click.pass_context
 @click.argument("day", type=int)
+def day(ctx, day: int):
+    ctx.obj = day
+
+
+@day.command()
+@click.pass_obj
 @click.argument("task", type=int)
-def main(day: int, task: int):
+@click.option("input_file", "--input", "-i", type=click.Path(exists=True, dir_okay=False))
+def task(day: int, task: int, input_file: Path | None):
     try:
-        paths = _prepare_environment(day=day, task=task)
+        paths = _prepare_environment(day=day, task=task, input_file_override=input_file)
     except OSError as e:
         print(e)
         sys.exit(1)
