@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Callable, TypeAlias
+from typing import Callable, TypeAlias, Iterable
 
 from aoc.spi import Task
 from .common import Move, score_round, Round
@@ -7,16 +7,17 @@ from .common import Move, score_round, Round
 Strategy: TypeAlias = list[Round]
 
 
-def load_strategy(input_path: Path, map_to_move: Callable[[str], Move]) -> Strategy:
+def load_strategy(
+    input_lines: Iterable[str], map_to_move: Callable[[str], Move]
+) -> Strategy:
     result: Strategy = []
-    with open(input_path) as f:
-        for line in f.readlines():
-            parts = line.strip().split()
-            moves = Round(
-                their_move=map_to_move(parts[0]),
-                my_move=map_to_move(parts[1]),
-            )
-            result.append(moves)
+    for line in input_lines:
+        parts = line.strip().split()
+        moves = Round(
+            their_move=map_to_move(parts[0]),
+            my_move=map_to_move(parts[1]),
+        )
+        result.append(moves)
 
     return result
 
@@ -34,6 +35,6 @@ class Task1(Task):
 
         raise ValueError(f"Unknown code: {code}")
 
-    def run(self, input_file: Path, working_dir: Path) -> int:
-        strategy = load_strategy(input_file, self.map_to_move)
+    def calculate(self, input_lines: Iterable[str], working_dir: Path) -> int:
+        strategy = load_strategy(input_lines, self.map_to_move)
         return sum(score_round(it) for it in strategy)

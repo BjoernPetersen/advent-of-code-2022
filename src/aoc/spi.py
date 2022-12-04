@@ -1,12 +1,17 @@
 import abc
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Iterable
 
 
 class Task(abc.ABC):
     @abc.abstractmethod
-    def run(self, input_file: Path, working_dir: Path) -> str | int:
+    def calculate(self, input_lines: Iterable[str], working_dir: Path) -> str | int:
         pass
+
+    def run(self, file: Path, working_dir: Path) -> str | int:
+        with open(file) as f:
+            return self.calculate((line.strip() for line in f.readlines()), working_dir)
 
 
 @dataclass(frozen=True)

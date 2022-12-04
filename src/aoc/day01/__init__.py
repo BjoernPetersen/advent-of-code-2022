@@ -1,21 +1,20 @@
 from pathlib import Path
+from typing import Iterable
 
 from aoc.spi import Day
 from aoc.spi import Task
 
 
-def read_inventories(input_file: Path) -> list[list[int]]:
+def read_inventories(input_lines: Iterable[str]) -> list[list[int]]:
     inventories: list[list[int]] = []
     current: list[int] = []
 
-    with open(input_file) as f:
-        for line in f.readlines():
-            nude_line = line.strip()
-            if nude_line:
-                current.append(int(nude_line))
-            else:
-                inventories.append(current)
-                current = []
+    for line in input_lines:
+        if line:
+            current.append(int(line))
+        else:
+            inventories.append(current)
+            current = []
 
     if current:
         inventories.append(current)
@@ -24,15 +23,15 @@ def read_inventories(input_file: Path) -> list[list[int]]:
 
 
 class Task1(Task):
-    def run(self, input_file: Path, working_dir: Path) -> int:
-        inventories = read_inventories(input_file)
+    def calculate(self, input_lines: Iterable[str], working_dir: Path) -> int:
+        inventories = read_inventories(input_lines)
         sums = [sum(inv) for inv in inventories]
         return max(sums)
 
 
 class Task2(Task):
-    def run(self, input_file: Path, working_dir: Path) -> int:
-        inventories = read_inventories(input_file)
+    def calculate(self, input_lines: Iterable[str], working_dir: Path) -> int:
+        inventories = read_inventories(input_lines)
         sums = [sum(inv) for inv in inventories]
         sums.sort()
         return sum(sums[-3:])

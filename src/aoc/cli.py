@@ -61,7 +61,11 @@ def day(ctx, day: int):
 )
 def task(day: int, task: int, input_file: Path | None):
     try:
-        paths = _prepare_environment(day=day, task=task, input_file_override=input_file)
+        paths = _prepare_environment(
+            day=day,
+            task=task,
+            input_file_override=input_file,
+        )
     except OSError as e:
         print(e)
         sys.exit(1)
