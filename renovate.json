@@ -1,0 +1,18 @@
+{
+  "extends": [
+    "github>preparingforexams/renovate-config"
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "rate_limit"
+      ],
+      "matchManagers": [
+        "poetry"
+      ],
+      "registryUrls": [
+        "https://pypi.bjoernpetersen.net"
+      ]
+    }
+  ]
+}
