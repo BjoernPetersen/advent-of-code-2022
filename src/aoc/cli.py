@@ -56,7 +56,9 @@ def day(ctx, day: int):
 @day.command()
 @click.pass_obj
 @click.argument("task", type=int)
-@click.option("input_file", "--input", "-i", type=click.Path(exists=True, dir_okay=False))
+@click.option(
+    "input_file", "--input", "-i", type=click.Path(exists=True, dir_okay=False)
+)
 def task(day: int, task: int, input_file: Path | None):
     try:
         paths = _prepare_environment(day=day, task=task, input_file_override=input_file)

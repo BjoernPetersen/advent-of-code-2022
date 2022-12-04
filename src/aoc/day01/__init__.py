@@ -24,7 +24,6 @@ def read_inventories(input_file: Path) -> list[list[int]]:
 
 
 class Task1(Task):
-
     def run(self, input_file: Path, working_dir: Path) -> str:
         inventories = read_inventories(input_file)
         sums = [sum(inv) for inv in inventories]
