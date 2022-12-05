@@ -45,6 +45,7 @@ class Move:
 
 
 def create_buckets(bucket_lines: list[str]) -> Buckets:
+    # Is this function pretty? No. Does it work? Absolutely.
     number_row = bucket_lines[-1]
     bucket_count = (len(number_row) + 2) // 4
     buckets: Buckets = [[] for _ in range(bucket_count)]

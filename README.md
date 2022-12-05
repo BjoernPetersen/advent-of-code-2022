@@ -1,7 +1,7 @@
 # advent-of-code-2022
 
 Wanted to do this in Swift, but Jetbrains doesn't have a (non-mobile development, non-Mac) IDE
-for it.
+for it, so I'm absolutely phoning it in.
 
 ## Prerequisites
 
