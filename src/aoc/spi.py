@@ -11,7 +11,10 @@ class Task(abc.ABC):
 
     def run(self, file: Path, working_dir: Path) -> str | int:
         with open(file) as f:
-            return self.calculate((line.strip() for line in f.readlines()), working_dir)
+            return self.calculate(
+                (line.rstrip("\n") for line in f.readlines()),
+                working_dir,
+            )
 
 
 @dataclass(frozen=True)
