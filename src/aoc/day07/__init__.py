@@ -31,6 +31,10 @@ class Path(abc.ABC):
     def size(self) -> int:
         pass
 
+    @abc.abstractmethod
+    def absolute_path(self) -> str:
+        pass
+
 
 class Directory(Path):
     def __init__(self, name: str, parent: Directory | None):
@@ -76,6 +80,16 @@ class Directory(Path):
     def size(self) -> int:
         return sum(file.size for file in self.files())
 
+    def absolute_path(self) -> str:
+        parent = self.parent
+        if not parent:
+            return self.name
+
+        return f"{parent.absolute_path()}{self.name}/"
+
+    def __repr__(self):
+        return f"{self.absolute_path()} ({len(self._children)} children)"
+
 
 class File(Path):
     def __init__(self, name: str, size: int, parent: Directory):
@@ -88,6 +102,13 @@ class File(Path):
 
     def files(self) -> Iterable[File]:
         yield self
+
+    def absolute_path(self) -> str:
+        assert self.parent is not None
+        return f"{self.parent.absolute_path()}{self.name}"
+
+    def __repr__(self) -> str:
+        return f"{self.absolute_path()} (size {self.size})"
 
 
 class Command(abc.ABC):
@@ -102,6 +123,9 @@ class Command(abc.ABC):
     @abc.abstractmethod
     def synthesize(self, working_dir: Directory) -> Directory:
         pass
+
+    def __repr__(self):
+        return " ".join([self.prompt, *self.output])
 
 
 class List(Command):
@@ -129,9 +153,6 @@ class ChangeDirectory(Command):
             return parent
 
         return working_dir.add_directory(target)
-
-    def __repr__(self):
-        return " ".join([self.prompt, *self.output])
 
 
 def parse_command(lines: list[str]) -> Command:
