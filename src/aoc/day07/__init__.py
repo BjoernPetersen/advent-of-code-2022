@@ -186,4 +186,21 @@ class Task1(Task):
         return total_size
 
 
-day = Day([Task1()])
+class Task2(Task):
+    def calculate(
+        self, input_lines: Iterable[str], working_dir: pathlib.Path
+    ) -> str | int:
+        root = parse_input(input_lines)
+        available = 70000000
+        required = 30000000
+        free = available - root.size
+        needed = required - free
+
+        return min(
+            directory.size
+            for directory in root.directories()
+            if directory.size >= needed
+        )
+
+
+day = Day([Task1(), Task2()])
