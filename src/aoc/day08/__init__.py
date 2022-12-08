@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-from itertools import pairwise
 from pathlib import Path
 from typing import Iterable
 
@@ -77,27 +76,19 @@ class Task1(Task):
 
         for y in range(grid.height):
             for direction in Direction:
-                for pair in pairwise(grid.get_row(y, direction)):
-                    if pair[1].height > pair[0].height:
-                        visible.add(pair[1].position)
-                    else:
-                        break
+                current_max = -1
+                for tree in grid.get_row(y, direction):
+                    if tree.height > current_max:
+                        visible.add(tree.position)
+                        current_max = tree.height
 
         for x in range(grid.width):
             for direction in Direction:
-                for pair in pairwise(grid.get_column(x, direction)):
-                    if pair[1].height > pair[0].height:
-                        visible.add(pair[1].position)
-                    else:
-                        break
-
-        for x in range(grid.width):
-            visible.add((x, 0))
-            visible.add((x, grid.height - 1))
-
-        for y in range(grid.height):
-            visible.add((0, y))
-            visible.add((grid.width - 1, y))
+                current_max = -1
+                for tree in grid.get_column(x, direction):
+                    if tree.height > current_max:
+                        visible.add(tree.position)
+                        current_max = tree.height
 
         return visible
 
