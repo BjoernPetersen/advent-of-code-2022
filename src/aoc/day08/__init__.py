@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import operator
 from dataclasses import dataclass
 from enum import IntEnum
+from functools import reduce
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, NamedTuple
 
 from aoc.spi import Day
 from aoc.spi import Task
@@ -14,9 +16,22 @@ class Direction(IntEnum):
     descending = -1
 
 
+class Position(NamedTuple):
+    x: int
+    y: int
+
+    def __sub__(self, other) -> Position:
+        if not isinstance(other, Position):
+            raise ValueError(f"Not a position: {other}")
+        return Position(self.x - other.x, self.y - other.y)
+
+    def __len__(self) -> int:
+        return abs(self.x) + abs(self.y)
+
+
 @dataclass
 class Tree:
-    position: tuple[int, int]
+    position: Position
     height: int
 
 
@@ -29,18 +44,46 @@ class Grid:
     def get_tree(self, x: int, y: int) -> Tree:
         return self._trees[y][x]
 
-    def get_row(self, y: int, direction: Direction) -> Iterable[Tree]:
+    def get_row(
+        self,
+        y: int,
+        direction: Direction,
+        start_x: int | None = None,
+    ) -> Iterable[Tree]:
         column = self._trees[y]
         size = len(column)
-        start_index = 0 if direction == Direction.ascending else size - 1
+
+        start_index: int
+        if start_x is None:
+            if direction == Direction.ascending:
+                start_index = 0
+            else:
+                start_index = size - 1
+        else:
+            start_index = start_x
+
         stop_index = size if direction == Direction.ascending else -1
         for index in range(start_index, stop_index, direction):
             yield column[index]
 
-    def get_column(self, x: int, direction: Direction) -> Iterable[Tree]:
+    def get_column(
+        self,
+        x: int,
+        direction: Direction,
+        start_y: int | None = None,
+    ) -> Iterable[Tree]:
         trees = self._trees
         size = len(trees)
-        start_index = 0 if direction == Direction.ascending else size - 1
+
+        start_index: int
+        if start_y is None:
+            if direction == Direction.ascending:
+                start_index = 0
+            else:
+                start_index = size - 1
+        else:
+            start_index = start_y
+
         stop_index = size if direction == Direction.ascending else -1
         for index in range(start_index, stop_index, direction):
             yield trees[index][x]
@@ -54,7 +97,7 @@ class Grid:
                 height = int(char)
                 row.append(
                     Tree(
-                        position=(x, y),
+                        position=Position(x, y),
                         height=height,
                     )
                 )
@@ -98,4 +141,35 @@ class Task1(Task):
         return len(visible)
 
 
-day = Day([Task1()])
+class Task2(Task):
+    def calculate_scenic_score(self, grid: Grid, x: int, y: int) -> int:
+        distances = [0, 0, 0, 0]
+        index = 0
+        candidate = grid.get_tree(x, y)
+        for get_line, start_index, line_index in [
+            (grid.get_row, x, y),
+            (grid.get_column, y, x),
+        ]:
+            for direction in Direction:
+                for tree in get_line(line_index, direction, start_index):
+                    if tree == candidate:
+                        continue
+
+                    distances[index] = len(candidate.position - tree.position)
+                    if tree.height >= candidate.height:
+                        break
+
+                index += 1
+
+        return reduce(operator.mul, distances, 1)
+
+    def calculate(self, input_lines: Iterable[str], working_dir: Path) -> str | int:
+        grid = Grid.parse(input_lines)
+        return max(
+            self.calculate_scenic_score(grid, x, y)
+            for x in range(grid.width)
+            for y in range(grid.height)
+        )
+
+
+day = Day([Task1(), Task2()])

@@ -1,6 +1,6 @@
 import pytest
 
-from aoc.day08 import day, Grid, Direction, Task1, Tree
+from aoc.day08 import day, Grid, Direction, Task1, Tree, Position
 from aoc.spi import Task
 from tests.aoc.example import ExampleData
 
@@ -63,7 +63,7 @@ def test_example_detailed(task: Task1, test_data):
     for y in range(grid.height):
         row: list[Tree] = []
         for x in range(grid.width):
-            position = (x, y)
+            position = Position(x, y)
             if position in visible:
                 row.append(Tree(position, 1))
             else:
