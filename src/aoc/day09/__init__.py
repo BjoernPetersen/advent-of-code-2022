@@ -29,7 +29,7 @@ class Vector(NamedTuple):
 
     def length(self) -> float:
         # Euclidian norm
-        return math.sqrt(sum(x**2 for x in self))
+        return math.sqrt(sum(x ** 2 for x in self))
 
     def unit(self) -> Vector:
         norm = self.length()
@@ -61,7 +61,7 @@ def parse_move(line: str) -> Vector:
 
 
 def get_steps(move: Vector) -> Iterable[Vector]:
-    length = int(move.length())
+    length = max(abs(move))
     if length == 1:
         yield move
     else:
@@ -75,7 +75,9 @@ def follow_head(head: Vector, tail: Vector) -> Vector:
         return tail
 
     diff = head - tail
-    if diff.length() < 2:
+
+    # Check the Chebyshev distance
+    if max(abs(diff)) <= 1:
         return tail
 
     move = Vector(
