@@ -29,7 +29,7 @@ class Vector(NamedTuple):
 
     def length(self) -> float:
         # Euclidian norm
-        return math.sqrt(sum(x ** 2 for x in self))
+        return math.sqrt(sum(x**2 for x in self))
 
     def unit(self) -> Vector:
         norm = self.length()
