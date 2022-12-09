@@ -15,8 +15,14 @@ def test_data() -> ExampleData:
     return ExampleData(9, 2)
 
 
-@pytest.mark.skip
-def test_example(task, test_data, tmp_path):
-    path = test_data.provide_path()
+@pytest.mark.parametrize(
+    "index, expected",
+    [
+        (0, 1),
+        (1, 36),
+    ],
+)
+def test_examples(task, test_data, tmp_path, index, expected):
+    path = test_data.provide_path(index)
     result = task.run(path, tmp_path)
-    assert result == 1
+    assert result == expected

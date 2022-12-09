@@ -101,4 +101,26 @@ class Task1(Task):
         return len(positions)
 
 
-day = Day([Task1()])
+class Task2(Task):
+    def calculate(self, input_lines: Iterable[str], working_dir: Path) -> str | int:
+        start_position = Vector(0, 0)
+        positions = {start_position}
+        head = start_position
+        tails = [start_position] * 9
+        for line in input_lines:
+            move = parse_move(line)
+            for step in get_steps(move):
+                head += step
+                leader = head
+                for tail_index in range(len(tails)):
+                    tail = tails[tail_index]
+                    leader = follow_head(head=leader, tail=tail)
+                    tails[tail_index] = leader
+
+                    if tail_index == len(tails) - 1:
+                        positions.add(leader)
+
+        return len(positions)
+
+
+day = Day([Task1(), Task2()])
