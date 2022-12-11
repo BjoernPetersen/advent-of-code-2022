@@ -31,18 +31,29 @@ Operation: TypeAlias = Callable[[int], int]
 def parse_operation(decl: str) -> Operation:
     relevant = decl[len("new = old ") :]
     operator, operand = relevant.split()
+    literal = 0 if operand == "old" else int(operand)
 
-    def get_operand(old: int) -> int:
-        if operand == "old":
-            return old
-        else:
-            return int(operand)
+    def multiply_old(old: int) -> int:
+        return old**2
+
+    def multiply_literal(old: int) -> int:
+        return old * literal
+
+    def add_old(old: int) -> int:
+        return 2 * old
+
+    def add_literal(old: int) -> int:
+        return old + literal
 
     if operator == "*":
-        return lambda old: old * get_operand(old)
+        if literal == 0:
+            return multiply_old
+        return multiply_literal
 
     if operator == "+":
-        return lambda old: old + get_operand(old)
+        if literal == 0:
+            return add_old
+        return add_literal
 
     raise ValueError(f"Unknown operator: {operator}")
 
