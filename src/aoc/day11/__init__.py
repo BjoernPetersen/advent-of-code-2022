@@ -31,12 +31,12 @@ Operation: TypeAlias = Callable[[int], int]
 
 
 def parse_operation(decl: str) -> Operation:
-    relevant = decl[len("new = old "):]
+    relevant = decl[len("new = old ") :]
     operator, operand = relevant.split()
     literal = 0 if operand == "old" else int(operand)
 
     def multiply_old(old: int) -> int:
-        return old ** 2
+        return old**2
 
     def multiply_literal(old: int) -> int:
         return old * literal
