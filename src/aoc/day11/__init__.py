@@ -99,4 +99,20 @@ class Task1(Task):
         return monkeys[0].inspected_items * monkeys[1].inspected_items
 
 
-day = Day([Task1()])
+class Task2(Task):
+    def calculate(self, input_lines: Iterable[str], working_dir: Path) -> str | int:
+        monkeys = parse_input(input_lines)
+
+        def catch(item: int, target: int):
+            monkeys[target].catch(item)
+
+        for _ in range(10_000):
+            for monkey in monkeys:
+                monkey.inspect()
+                monkey.throw_items(catch)
+
+        monkeys.sort(key=lambda m: m.inspected_items, reverse=True)
+        return monkeys[0].inspected_items * monkeys[1].inspected_items
+
+
+day = Day([Task1(), Task2()])
