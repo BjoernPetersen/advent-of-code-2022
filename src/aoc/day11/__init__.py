@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import functools
+import operator
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Callable, TypeAlias
@@ -29,12 +31,12 @@ Operation: TypeAlias = Callable[[int], int]
 
 
 def parse_operation(decl: str) -> Operation:
-    relevant = decl[len("new = old ") :]
+    relevant = decl[len("new = old "):]
     operator, operand = relevant.split()
     literal = 0 if operand == "old" else int(operand)
 
     def multiply_old(old: int) -> int:
-        return old**2
+        return old ** 2
 
     def multiply_literal(old: int) -> int:
         return old * literal
@@ -75,8 +77,12 @@ class Monkey:
             test=Test.parse(decl[3:6]),
         )
 
-    def inspect(self):
-        self.items = [self.operation(item) for item in self.items]
+    def inspect(self, modulo: int):
+        if modulo:
+            self.items = [self.operation(item) % modulo for item in self.items]
+        else:
+            self.items = [self.operation(item) for item in self.items]
+
         self.inspected_items += len(self.items)
 
     def lose_interest(self):
@@ -102,7 +108,7 @@ class Task1(Task):
         monkeys = parse_input(input_lines)
         for _ in range(20):
             for monkey in monkeys:
-                monkey.inspect()
+                monkey.inspect(0)
                 monkey.lose_interest()
                 monkey.throw_items(lambda item, target: monkeys[target].catch(item))
 
@@ -117,9 +123,15 @@ class Task2(Task):
         def catch(item: int, target: int):
             monkeys[target].catch(item)
 
+        divisor_product = functools.reduce(
+            operator.mul,
+            (m.test.divisor for m in monkeys),
+            1,
+        )
+
         for _ in range(10_000):
             for monkey in monkeys:
-                monkey.inspect()
+                monkey.inspect(divisor_product)
                 monkey.throw_items(catch)
 
         monkeys.sort(key=lambda m: m.inspected_items, reverse=True)
